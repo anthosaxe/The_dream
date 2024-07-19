@@ -10,6 +10,11 @@
 
 <body>
   <?php
+
+  $devise1 = 'EUR';
+  $devise2 = 'USD';
+  $amount = 1;
+
   if (isset($_GET['amount']) && isset($_GET['devise1']) && isset($_GET['devise2'])) {
     $amount = $_GET['amount'];
     $devise1 = strtolower($_GET['devise1']);
@@ -93,6 +98,27 @@ $data = json_decode($response, true);
       </div>
       <div class="col-span-4 flex justify-center mt-5">
         <?php echo "$convert $devise2"; ?>
+      </div>
+      <div class="col-span-12 flex justify-center mt-5">
+        Change Rate : 
+        <?php 
+          $host = 'dream-database'; // Le nom du service Docker pour MariaDB
+          $db = 'mydb';
+          $user = 'root'; // Le nom d'utilisateur défini dans docker.env
+          $pass = 'root'; // Le mot de passe défini dans docker.env
+          $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
+          $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+              
+          $stmt = $pdo->query('SELECT * FROM Persons'); 
+          
+          while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+              echo '<pre>';
+              print_r($row);
+              echo '</pre>';
+          }
+          ?>
+          
+        ?>
       </div>
     </div>
   </form>
