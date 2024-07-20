@@ -21,6 +21,8 @@ services:
     image: mariadb:10.4.2
     container_name: dream-database
     restart: always
+    ports:
+      - 8080:80
     volumes:
       - ./database:/docker-entrypoint-initdb.d/
       - becode_data:/var/lib/mysql
@@ -28,6 +30,11 @@ services:
       - ./docker.env
     networks:
       - becode
+    environment:
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: mydb
+      MARIADB_USER: root
+      MARIADB_PASSWORD: root
 
   ## PhpMyAdmin
   myadmin:

@@ -25,29 +25,29 @@
   // "from=eur&to=usd";
   $param = "from=$devise1&to=$devise2";
   $url .= $param;
-  
+
   $curl = curl_init();
 
-curl_setopt_array($curl, [
-	CURLOPT_URL => $url,
-	CURLOPT_RETURNTRANSFER => true,
-	CURLOPT_ENCODING => "",
-	CURLOPT_MAXREDIRS => 10,
-	CURLOPT_TIMEOUT => 30,
-	CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-	CURLOPT_CUSTOMREQUEST => "GET",
-	CURLOPT_HTTPHEADER => [
-		"x-rapidapi-host: forex-convertor.p.rapidapi.com",
-		"x-rapidapi-key: a47cff304emsh5ef9517c691c0aep119250jsn4de641afed63"
-	],
-]);
+  curl_setopt_array($curl, [
+    CURLOPT_URL => $url,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_ENCODING => "",
+    CURLOPT_MAXREDIRS => 10,
+    CURLOPT_TIMEOUT => 30,
+    CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    CURLOPT_CUSTOMREQUEST => "GET",
+    CURLOPT_HTTPHEADER => [
+      "x-rapidapi-host: forex-convertor.p.rapidapi.com",
+      "x-rapidapi-key: a47cff304emsh5ef9517c691c0aep119250jsn4de641afed63"
+    ],
+  ]);
 
-$response = curl_exec($curl);
-$err = curl_error($curl);
+  $response = curl_exec($curl);
+  $err = curl_error($curl);
 
-curl_close($curl);
+  curl_close($curl);
 
-$data = json_decode($response, true);
+  $data = json_decode($response, true);
 
   function create_select($name)
   {
@@ -61,7 +61,7 @@ $data = json_decode($response, true);
     return $select;
   }
 
-  $convert = $amount*(float)$data['exchangeRate'];
+  $convert = $amount * (float)$data['exchangeRate'];
 
   ?>
 
@@ -87,7 +87,7 @@ $data = json_decode($response, true);
         <?php echo create_select("devise2") ?>
       </div>
       <div class="col-span-12 flex justify-center mt-5">
-        Change Rate : 
+        Change Rate :
         <?php echo $data["exchangeRate"]; ?>
       </div>
       <div class="col-span-4 flex justify-center mt-5">
@@ -100,13 +100,19 @@ $data = json_decode($response, true);
         <?php echo "$convert $devise2"; ?>
       </div>
       <div class="col-span-12 flex justify-center mt-5">
-        Change Rate : 
-        <?php 
-          $host = 'dream-database'; // Le nom du service Docker pour MariaDB
-          $db = 'mydb';
-          $user = 'root'; // Le nom d'utilisateur défini dans docker.env
-          $pass = 'root'; // Le mot de passe défini dans docker.env
-          $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
+        <?php
+        $host = 'database'; // Le nom du service Docker pour MariaDB
+        $db = 'mydb';
+        $user = 'root'; // Le nom d'utilisateur défini dans docker.env
+        $pass = 'root'; // Le mot de passe défini dans docker.env
+        $conn = new mysqli($host, $user, $pass, $db);
+        // Vérifier la connexion
+        if ($conn->connect_error) {
+          die("Échec de la connexion : " . $conn->connect_error);
+        }
+        echo "Connexion réussie";
+        ?>
+        <!-- $pdo = new PDO("mysql:host=$host;dbname=$db;charset=utf8", $user, $pass);
           $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
               
           $stmt = $pdo->query('SELECT * FROM Persons'); 
@@ -116,9 +122,7 @@ $data = json_decode($response, true);
               print_r($row);
               echo '</pre>';
           }
-          ?>
-          
-        ?>
+          ?> -->
       </div>
     </div>
   </form>
